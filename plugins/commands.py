@@ -41,7 +41,6 @@ async def invite(client, message):
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message):
-    await message.react(emoji=random.choice(REACTIONS))
     pm_mode = False
     try:
          data = message.command[1]
@@ -87,38 +86,6 @@ async def start(client:Client, message):
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
         )
-        return 
-        # refer 
-    if len(message.command) == 2 and message.command[1].startswith("reff_"):
-        try:
-            user_id = int(message.command[1].split("_")[1])
-        except ValueError:
-            await message.reply_text("Iɴᴠᴀʟɪᴅ ʀᴇғᴇʀ⁉️")
-            return
-        if user_id == message.from_user.id:
-            await message.reply_text("Hᴇʏ ᴅᴜᴅᴇ, ʏᴏᴜ ᴄᴀɴ ɴᴏᴛ ʀᴇғᴇʀ ʏᴏᴜʀsᴇʟғ⁉️")
-            return
-        if referdb.is_user_in_list(message.from_user.id):
-            await message.reply_text("‼️ Yᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴀʟʀᴇᴀᴅʏ ɪɴᴠɪᴛᴇᴅ ᴏʀ ᴊᴏɪɴᴇᴅ")
-            return
-        if await db.is_user_exist(message.from_user.id): 
-            await message.reply_text("‼️ Yᴏᴜ ʜᴀᴠᴇ ʙᴇᴇɴ ᴀʟʀᴇᴀᴅʏ ɪɴᴠɪᴛᴇᴅ ᴏʀ ᴊᴏɪɴᴇᴅ")
-            return            
-        try:
-            uss = await client.get_users(user_id)
-        except Exception:
-            return
-        referdb.add_user(message.from_user.id)
-        fromuse = referdb.get_refer_points(user_id) + 10
-        if fromuse == 100:
-            referdb.add_refer_points(user_id, 0) 
-            await message.reply_text(f"𝙔𝙤𝙪 𝙝𝙖𝙫𝙚 𝙗𝙚𝙚𝙣 𝙨𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙞𝙣𝙫𝙞𝙩𝙚𝙙 𝙗𝙮 {uss.mention}!") 
-            await client.send_message(user_id, text=f"𝙔𝙤𝙪 𝙝𝙖𝙫𝙚 𝙗𝙚𝙚𝙣 𝙨𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙞𝙣𝙫𝙞𝙩𝙚𝙙 𝙗𝙮 {message.from_user.mention}!") 
-            await add_premium(client, user_id, uss)
-        else:
-            referdb.add_refer_points(user_id, fromuse)
-            await message.reply_text(f"𝙔𝙤𝙪 𝙝𝙖𝙫𝙚 𝙗𝙚𝙚𝙣 𝙨𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙞𝙣𝙫𝙞𝙩𝙚𝙙 𝙗𝙮 {uss.mention}!")
-            await client.send_message(user_id, f"𝙔𝙤𝙪 𝙝𝙖𝙫𝙚 𝙨𝙪𝙘𝙘𝙚𝙨𝙨𝙛𝙪𝙡𝙡𝙮 𝙞𝙣𝙫𝙞𝙩𝙚𝙙 {message.from_user.mention}!")
         return
 
     if len(message.command) == 2 and message.command[1].startswith('getfile'):
@@ -127,49 +94,7 @@ async def start(client:Client, message):
         message.text = search 
         await auto_filter(client, message) 
         return
-
-    if len(message.command) == 2 and message.command[1] in ["ads"]:
-        msg, _, impression = await mdb.get_advirtisment()
-        user = await db.get_user(message.from_user.id)
-        seen_ads = user.get("seen_ads", False)
-        JISSHU_ADS_LINK = await db.jisshu_get_ads_link()
-        buttons = [[
-                    InlineKeyboardButton('❌ ᴄʟᴏꜱᴇ ❌', callback_data='close_data')
-                  ]]
-        reply_markup = InlineKeyboardMarkup(buttons)
-        if msg:
-            await message.reply_photo(
-                photo=JISSHU_ADS_LINK if JISSHU_ADS_LINK else URL,
-                caption=msg,
-                reply_markup=reply_markup,
-                parse_mode=enums.ParseMode.HTML
-            )
-
-            if impression is not None and not seen_ads:
-                await mdb.update_advirtisment_impression(int(impression) - 1)
-                await db.update_value(message.from_user.id, "seen_ads", True)
-        else:
-            await message.reply("<b>No Ads Found</b>")
-
-        await mdb.reset_advertisement_if_expired()
-
-        if msg is None and seen_ads:
-            await db.update_value(message.from_user.id, "seen_ads", False)
-        return
-    
-    if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
-        status = get_status()
-        aks=await message.reply_text(f"<b>🔥 ʏᴇs {status},\nʜᴏᴡ ᴄᴀɴ ɪ ʜᴇʟᴘ ʏᴏᴜ??</b>")
-        await asyncio.sleep(600)
-        await aks.delete()
-        await m.delete()
-        if (str(message.chat.id)).startswith("-100") and not await db.get_chat(message.chat.id):
-            total=await client.get_chat_members_count(message.chat.id)
-            group_link = await message.chat.export_invite_link()
-            user = message.from_user.mention if message.from_user else "Dear" 
-            await client.send_message(LOG_CHANNEL, script.NEW_GROUP_TXT.format(temp.B_LINK, message.chat.title, message.chat.id, message.chat.username, group_link, total, user))       
-            await db.add_chat(message.chat.id, message.chat.title)
-        return 
+        
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         await client.send_message(LOG_CHANNEL, script.NEW_USER_TXT.format(temp.B_LINK, message.from_user.id, message.from_user.mention))
@@ -194,9 +119,6 @@ async def start(client:Client, message):
                             InlineKeyboardButton('Tᴏᴘ Tʀᴇɴᴅɪɴɢ ⚡', callback_data="trending")
                         ]] 
                         reply_markup = InlineKeyboardMarkup(buttons)
-                        m=await message.reply_sticker("CAACAgQAAxkBAAEn9_ZmGp1uf1a38UrDhitnjOOqL1oG3gAC9hAAAlC74FPEm2DxqNeOmB4E") 
-                        await asyncio.sleep(1)
-                        await m.delete()
                         await message.reply_photo(photo=random.choice(START_IMG), caption=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
                             reply_markup=reply_markup,
                             parse_mode=enums.ParseMode.HTML)
@@ -299,42 +221,6 @@ async def start(client:Client, message):
         pre, grp_id, file_id = "", 0, data
 
     user_id = m.from_user.id
-    if not await db.has_premium_access(user_id):
-        grp_id = int(grp_id)
-        user_verified = await db.is_user_verified(user_id)
-        settings = await get_settings(grp_id , pm_mode=pm_mode)
-        is_second_shortener = await db.use_second_shortener(user_id, settings.get('verify_time', TWO_VERIFY_GAP)) 
-        is_third_shortener = await db.use_third_shortener(user_id, settings.get('third_verify_time', THREE_VERIFY_GAP))
-        if settings.get("is_verify", IS_VERIFY) and not user_verified or is_second_shortener or is_third_shortener:
-            verify_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
-            await db.create_verify_id(user_id, verify_id)
-            temp.CHAT[user_id] = grp_id
-            verify = await get_shortlink(f"https://telegram.me/{temp.U_NAME}?start=notcopy_{user_id}_{verify_id}_{file_id}", grp_id, is_second_shortener, is_third_shortener , pm_mode=pm_mode)
-            if is_third_shortener:
-                howtodownload = settings.get('tutorial_3', TUTORIAL_3)
-            else:
-                howtodownload = settings.get('tutorial_2', TUTORIAL_2) if is_second_shortener else settings.get('tutorial', TUTORIAL)
-            buttons = [[
-                InlineKeyboardButton(text="✅ ᴠᴇʀɪғʏ ✅", url=verify),
-                InlineKeyboardButton(text="ʜᴏᴡ ᴛᴏ ᴠᴇʀɪғʏ❓", url=howtodownload)
-                ],[
-                InlineKeyboardButton(text="😁 ʙᴜʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ - ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ 😁", callback_data='seeplans'),
-            ]]
-            reply_markup=InlineKeyboardMarkup(buttons)
-            if await db.user_verified(user_id): 
-                msg = script.THIRDT_VERIFICATION_TEXT
-            else:            
-                msg = script.SECOND_VERIFICATION_TEXT if is_second_shortener else script.VERIFICATION_TEXT
-            d = await m.reply_text(
-                text=msg.format(message.from_user.mention, get_status()),
-                protect_content = False,
-                reply_markup=reply_markup,
-                parse_mode=enums.ParseMode.HTML
-            )
-            await asyncio.sleep(300) 
-            await d.delete()
-            await m.delete()
-            return
 
     if data and data.startswith("allfiles"):
         _, key = data.split("_", 1)
@@ -529,79 +415,6 @@ async def save_template(client, message):
     await save_group_settings(grp_id, 'template', template)
     await message.reply_text(f"Successfully changed template for {title} to\n\n{template}", disable_web_page_preview=True)
     
-@Client.on_message(filters.command("send"))
-async def send_msg(bot, message):
-    if message.from_user.id not in ADMINS:
-        await message.reply('<b>ᴏɴʟʏ ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴄᴀɴ ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ...</b>')
-        return
-    if message.reply_to_message:
-        target_ids = message.text.split(" ")[1:]
-        if not target_ids:
-            await message.reply_text("<b>ᴘʟᴇᴀꜱᴇ ᴘʀᴏᴠɪᴅᴇ ᴏɴᴇ ᴏʀ ᴍᴏʀᴇ ᴜꜱᴇʀ ɪᴅꜱ ᴀꜱ ᴀ ꜱᴘᴀᴄᴇ...</b>")
-            return
-        out = "\n\n"
-        success_count = 0
-        try:
-            users = await db.get_all_users()
-            for target_id in target_ids:
-                try:
-                    user = await bot.get_users(target_id)
-                    out += f"{user.id}\n"
-                    await message.reply_to_message.copy(int(user.id))
-                    success_count += 1
-                except Exception as e:
-                    out += f"‼️ ᴇʀʀᴏʀ ɪɴ ᴛʜɪꜱ ɪᴅ - <code>{target_id}</code> <code>{str(e)}</code>\n"
-            await message.reply_text(f"<b>✅️ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴍᴇꜱꜱᴀɢᴇ ꜱᴇɴᴛ ɪɴ `{success_count}` ɪᴅ\n<code>{out}</code></b>")
-        except Exception as e:
-            await message.reply_text(f"<b>‼️ ᴇʀʀᴏʀ - <code>{e}</code></b>")
-    else:
-        await message.reply_text("<b>ᴜꜱᴇ ᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴀꜱ ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ᴍᴇꜱꜱᴀɢᴇ, ꜰᴏʀ ᴇɢ - <code>/send userid1 userid2</code></b>")
-
-@Client.on_message(filters.regex("#request"))
-async def send_request(bot, message):
-    try:
-        request = message.text.split(" ", 1)[1]
-    except:
-        await message.reply_text("<b>‼️ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ɪɴᴄᴏᴍᴘʟᴇᴛᴇ</b>")
-        return
-    buttons = [[
-        InlineKeyboardButton('👀 ᴠɪᴇᴡ ʀᴇǫᴜᴇꜱᴛ 👀', url=f"{message.link}")
-    ],[
-        InlineKeyboardButton('⚙ sʜᴏᴡ ᴏᴘᴛɪᴏɴ ⚙', callback_data=f'show_options#{message.from_user.id}#{message.id}')
-    ]]
-    sent_request = await bot.send_message(REQUEST_CHANNEL, script.REQUEST_TXT.format(message.from_user.mention, message.from_user.id, request), reply_markup=InlineKeyboardMarkup(buttons))
-    btn = [[
-         InlineKeyboardButton('✨ ᴠɪᴇᴡ ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛ ✨', url=f"{sent_request.link}")
-    ]]
-    await message.reply_text("<b>✅ sᴜᴄᴄᴇꜱꜱғᴜʟʟʏ ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛ ʜᴀꜱ ʙᴇᴇɴ ᴀᴅᴅᴇᴅ, ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ꜱᴏᴍᴇᴛɪᴍᴇ...</b>", reply_markup=InlineKeyboardMarkup(btn))
-
-@Client.on_message(filters.command("search"))
-async def search_files(bot, message):
-    if message.from_user.id not in ADMINS:
-        await message.reply('Only the bot owner can use this command... 😑')
-        return
-    chat_type = message.chat.type
-    if chat_type != enums.ChatType.PRIVATE:
-        return await message.reply_text(f"<b>Hey {message.from_user.mention}, this command won't work in groups. It only works in my PM!</b>")  
-    try:
-        keyword = message.text.split(" ", 1)[1]
-    except IndexError:
-        return await message.reply_text(f"<b>Hey {message.from_user.mention}, give me a keyword along with the command to delete files.</b>")
-    files, total = await get_bad_files(keyword)
-    if int(total) == 0:
-        await message.reply_text('<i>I could not find any files with this keyword 😐</i>')
-        return 
-    file_names = "\n\n".join(f"{index + 1}. {item['file_name']}" for index, item in enumerate(files))
-    file_data = f"🚫 Your search - '{keyword}':\n\n{file_names}"    
-    with open("file_names.txt", "w" , encoding='utf-8') as file:
-        file.write(file_data)
-    await message.reply_document(
-        document="file_names.txt",
-        caption=f"<b>♻️ ʙʏ ʏᴏᴜʀ ꜱᴇᴀʀᴄʜ, ɪ ꜰᴏᴜɴᴅ - <code>{total}</code> ꜰɪʟᴇs</b>",
-        parse_mode=enums.ParseMode.HTML
-    )
-    os.remove("file_names.txt")
-
 @Client.on_message(filters.command("deletefiles"))
 async def deletemultiplefiles(bot, message):
     if message.from_user.id not in ADMINS:

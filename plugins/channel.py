@@ -1,8 +1,3 @@
-# Credit - JISSHU BOTS
-# Modified By NBBotz
-# Some Codes Are Taken From A GitHub Repository And We Forgot His Name
-# Base Code Bishal
-
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from info import CHANNELS, MOVIE_UPDATE_CHANNEL, ADMINS , LOG_CHANNEL
@@ -66,7 +61,7 @@ async def send_movie_updates(bot, file_name, caption, file_id):
                      "dvdrip", "dvdscr", "HDTC", "dvdscreen", "HDTS", "hdts"]
         quality = await check_qualities(caption, qualities) or "HDRip"
         language = ""
-        nb_languages = ["Hindi", "Bengali", "English", "Marathi", "Tamil", "Telugu", "Malayalam", "Kannada", "Punjabi", "Gujrati", "Korean", "Japanese", "Bhojpuri", "Dual", "Multi"]    
+        nb_languages = ["Tamil", "Bengali", "English", "Marathi", "Hindi", "Telugu", "Malayalam", "Kannada", "Punjabi", "Gujrati", "Korean", "Japanese", "Chinese", "Dual", "Multi", "Thai"]    
         for lang in nb_languages:
             if lang.lower() in caption.lower():
                 language += f"{lang}, "
@@ -76,13 +71,13 @@ async def send_movie_updates(bot, file_name, caption, file_id):
             return 
         processed_movies.add(movie_name)    
         poster_url = await get_imdb(movie_name)
-        caption_message = f"#New_File_Added ✅\n\nFile_Name:- <code>{movie_name}</code>\n\nLanguage:- {language}\n\nQuality:- {quality}" 
+        caption_message = f"<b>Movie :- <code>{movie_name}</code>\n\nLanguage :- {language}\n\nQuality :- {quality}\n\n📤 Uploading By :- <a href=https://t.me/Movies_Dayz>Movies Dayz</a>\n⚡ Powered By :- <a href=https://t.me/Star_Moviess_Tamil>Star Movies Tamil</a></b>" 
         search_movie = movie_name.replace(" ", '-')
         movie_update_channel = await db.movies_update_channel_id()    
         btn = [[
-            InlineKeyboardButton('📂 ɢᴇᴛ ғɪʟᴇ 📂', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
+            InlineKeyboardButton('📂 Get File 📂', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
         ],[
-            InlineKeyboardButton('♻️ ʜᴏᴡ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ♻️', url=f'https://t.me/JISSHU_BOTS')
+            InlineKeyboardButton('📥 How to Download 📥', url=f'https://t.me/How_downlode_dpbots/22')
         ]]
         reply_markup = InlineKeyboardMarkup(btn)
         if poster_url:

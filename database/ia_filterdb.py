@@ -38,7 +38,7 @@ class Media(Document):
     file_type = fields.StrField(allow_none=True)
 
     class Meta:
-        indexes = ('$file_name', )
+        indexes = ('$caption', )
         collection_name = COLLECTION_NAME
 
 async def get_files_db_size():

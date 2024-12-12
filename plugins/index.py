@@ -13,7 +13,7 @@ lock = asyncio.Lock()
 
 @Client.on_callback_query(filters.regex(r'^index'))
 async def index_files(bot, query):
-    _, ident, chat, lst_msg_id, skip = query.data.split("#")
+    _, ident, chat, lst_msg_id = query.data.split("#")
     if ident == 'yes':
         msg = query.message
         await msg.edit("<b>Indexing started...</b>")
@@ -21,7 +21,7 @@ async def index_files(bot, query):
             chat = int(chat)
         except:
             chat = chat
-        await index_files_to_db(int(lst_msg_id), chat, msg, bot, int(skip))
+        await index_files_to_db(int(lst_msg_id), chat, msg, bot)
     elif ident == 'cancel':
         temp.CANCEL = True
         await query.message.edit("Trying to cancel Indexing...")
@@ -58,32 +58,15 @@ async def send_for_index(bot, message):
     if chat.type != ChatType.CHANNEL:
         return await message.reply("I can only index channels.")
 
-    # Ask for skip message number
-    skip_msg = await message.reply("Send skip message number.")
-    try:
-        skip_message = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
-        await skip_msg.delete()
-
-        try:
-            skip = int(skip_message.text)
-        except ValueError:
-            return await message.reply("Invalid number. Please enter a valid skip number.")
-        
-        if skip < 0:
-            return await message.reply("Skip number cannot be negative.")
-        
-    except TimeoutError:
-        return await message.reply("You took too long to provide a skip number.")
-
-    # Confirmation buttons
+    # Confirmation buttons (removed skip logic)
     buttons = [[
-        InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}#{skip}')
+        InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}')
     ], [
         InlineKeyboardButton('CLOSE', callback_data='close_data'),
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
     await message.reply(
-        f'Do you want to index the "{chat.title}" channel?\nTotal Messages: <code>{last_msg_id}</code>\nSkip: <code>{skip}</code>',
+        f'Do you want to index the "{chat.title}" channel?\nTotal Messages: <code>{last_msg_id}</code>',
         reply_markup=reply_markup
     )
 
@@ -112,7 +95,7 @@ async def channel_info(bot, message):
     text += f'\n**Total:** {len(ids)}'
     await message.reply(text)
 
-async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
+async def index_files_to_db(lst_msg_id, chat, msg, bot):
     start_time = time.time()
     total_files = 0
     duplicate = 0
@@ -120,14 +103,14 @@ async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
     deleted = 0
     no_media = 0
     unsupported = 0
-    current = skip
     
     async with lock:
         try:
+            current = temp.CURRENT
+            temp.CANCEL = False
             async for message in bot.iter_messages(chat, lst_msg_id, skip):
                 time_taken = get_readable_time(time.time()-start_time)
                 if temp.CANCEL:
-                    temp.CANCEL = False
                     await msg.edit(f"Successfully Cancelled!\nCompleted in {time_taken}\n\nSaved <code>{total_files}</code> files to Database!\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>\nUnsupported Media: <code>{unsupported}</code>\nErrors Occurred: <code>{errors}</code>")
                     return
                 current += 1

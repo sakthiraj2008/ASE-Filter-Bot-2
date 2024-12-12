@@ -49,7 +49,11 @@ async def save_file(media):
 
     # TODO: Find better way to get same file_id for same media to avoid duplicates
     file_id, file_ref = unpack_new_file_id(media.file_id)
-    file_name = str(media.file_name)
+    file_name = re.sub(r"^@Movies_Dayz - |(_)", " ", str(media.caption))
+    file_caption = str(media.caption)
+    for pattern, replacement in replacements:
+        file_name = re.sub(pattern, replacement, file_name)
+        file_caption = re.sub(pattern, replacement, file_caption)
     try:
         file = Media(
             file_id=file_id,
@@ -57,7 +61,7 @@ async def save_file(media):
             file_name=file_name,
             file_size=media.file_size,
             mime_type=media.mime_type,
-            caption=media.caption.html if media.caption else None,
+            caption=file_caption,
             file_type=media.mime_type.split('/')[0]
         )
     except ValidationError:

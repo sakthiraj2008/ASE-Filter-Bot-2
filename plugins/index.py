@@ -13,7 +13,7 @@ lock = asyncio.Lock()
 
 @Client.on_callback_query(filters.regex(r'^index'))
 async def index_files(bot, query):
-    _, ident, chat, lst_msg_id = query.data.split("#")
+    _, ident, chat, lst_msg_id, skip = query.data.split("#")
     if ident == 'yes':
         msg = query.message
         await msg.edit("<b>Indexing started...</b>")
@@ -21,78 +21,63 @@ async def index_files(bot, query):
             chat = int(chat)
         except:
             chat = chat
-        await index_files_to_db(int(lst_msg_id), chat, msg, bot)
+        await index_files_to_db(int(lst_msg_id), chat, msg, bot, int(skip))
     elif ident == 'cancel':
         temp.CANCEL = True
         await query.message.edit("Trying to cancel Indexing...")
 
-@Client.on_message((filters.forwarded | (filters.regex(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")) & filters.text) & filters.private & filters.incoming & filters.user(ADMINS))
-async def send_for_index(client, message):
-    if message.text:
-        # Using regex to validate and extract group ID and message ID
-        regex = re.compile(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
-        match = regex.match(message.text)
-        if not match:
-            return await message.reply('Invalid link')
+@Client.on_message(filters.private & filters.incoming & filters.user(ADMINS))
+async def send_for_index(bot, message):
+    if lock.locked():
+        return await message.reply('Wait until the previous process completes.')
 
-        chat_id = match.group(4)
-        last_msg_id = int(match.group(5))
-        
-        if chat_id.isnumeric():
-            chat_id = int("-100" + chat_id)  # Convert chat ID to proper format
+    # Check for forwarded message or link
+    if message.text and message.text.startswith("https://t.me"):
+        try:
+            msg_link = message.text.split("/")
+            last_msg_id = int(msg_link[-1])
+            chat_id = msg_link[-2]
+            if chat_id.isnumeric():
+                chat_id = int("-100" + chat_id)
+        except:
+            await message.reply('Invalid message link!')
+            return
     elif message.forward_from_chat and message.forward_from_chat.type == ChatType.CHANNEL:
-        # Handle forwarded messages from channels
         last_msg_id = message.forward_from_message_id
         chat_id = message.forward_from_chat.username or message.forward_from_chat.id
     else:
+        await message.reply('Please forward a valid message from a channel or send a valid message link.')
         return
 
-    # Validate the chat ID and ensure bot can access it
+    # Validate the chat
     try:
-        chat = await client.get_chat(chat_id)
-    except ChannelInvalid:
-        return await message.reply('This may be a private channel / group. Make me an admin over there to index the files.')
-    except (UsernameInvalid, UsernameNotModified):
-        return await message.reply('Invalid Link specified.')
+        chat = await bot.get_chat(chat_id)
     except Exception as e:
         return await message.reply(f'Error: {e}')
 
-    # Attempt to fetch the specified message from the channel
+    if chat.type != ChatType.CHANNEL:
+        return await message.reply("I can only index channels.")
+
+    # Ask for skip count
+    s = await message.reply("Send skip message number.")
+    skip_msg = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
+    await s.delete()
     try:
-        msg = await client.get_messages(chat_id, message_id=last_msg_id)
-    except Exception:
-        return await message.reply('Make sure that I am an admin in the channel, if the channel is private.')
+        skip = int(skip_msg.text)
+    except:
+        return await message.reply("Invalid number.")
 
-    # Check if the message exists
-    if not msg:
-        return await message.reply('This may be a group, and I am not an admin of the group.')
-
-    # Create the inline keyboard buttons
-    buttons = [
-        [
-            InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}')
-        ],
-        [
-            InlineKeyboardButton('CLOSE', callback_data='close_data')
-        ]
-    ]
+    # Confirmation buttons
+    buttons = [[
+        InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}#{skip}')
+    ], [
+        InlineKeyboardButton('CLOSE', callback_data='close_data'),
+    ]]
     reply_markup = InlineKeyboardMarkup(buttons)
-
-    # Send the reply with buttons
     await message.reply(
-        f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>',
+        f'Do you want to index the "{chat.title}" channel?\nTotal Messages: <code>{last_msg_id}</code>',
         reply_markup=reply_markup
     )
-    
-@Client.on_message(filters.command('set_skip') & filters.user(ADMINS))
-async def set_skip_number(bot, message):
-    if len(message.command) == 2:
-        try: skip = int(message.text.split(" ", 1)[1])
-        except: return await message.reply("Skip Number Should Be An Integer.")
-        await message.reply(f"Successfully Set Skip Number As {skip}")
-        temp.CURRENT = int(skip)
-    else:
-        await message.reply("Give Me A Skip Number")
 
 @Client.on_message(filters.command('channel'))
 async def channel_info(bot, message):
@@ -109,7 +94,7 @@ async def channel_info(bot, message):
     text += f'\n**Total:** {len(ids)}'
     await message.reply(text)
 
-async def index_files_to_db(lst_msg_id, chat, msg, bot):
+async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
     start_time = time.time()
     total_files = 0
     duplicate = 0
@@ -117,14 +102,14 @@ async def index_files_to_db(lst_msg_id, chat, msg, bot):
     deleted = 0
     no_media = 0
     unsupported = 0
+    current = skip
     
     async with lock:
         try:
-            current = temp.CURRENT
-            temp.CANCEL = False
             async for message in bot.iter_messages(chat, lst_msg_id, skip):
                 time_taken = get_readable_time(time.time()-start_time)
                 if temp.CANCEL:
+                    temp.CANCEL = False
                     await msg.edit(f"Successfully Cancelled!\nCompleted in {time_taken}\n\nSaved <code>{total_files}</code> files to Database!\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>\nUnsupported Media: <code>{unsupported}</code>\nErrors Occurred: <code>{errors}</code>")
                     return
                 current += 1

@@ -34,31 +34,31 @@ COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Files')
 LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '0'))  # set shortner log channel
 DELETE_CHANNELS = int(environ.get('DELETE_CHANNELS','0')) # The movie you upload in it will be deleted from the bot.
 LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '0'))
-auth_channel = environ.get('AUTH_CHANNEL', '')
+auth_channel = environ.get('AUTH_CHANNEL', '-1002008853384')
 SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '0'))
-request_channel = environ.get('REQUEST_CHANNEL', '0') # If anyone sends a request message to your bot, you will get it in this channel.
+request_channel = environ.get('REQUEST_CHANNEL', '-1001793064603') # If anyone sends a request message to your bot, you will get it in this channel.
 MOVIE_UPDATE_CHANNEL = int(environ.get('MOVIE_UPDATE_CHANNEL', '-1001821439025')) # 
-SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/') #Support group link ( make sure bot is admin )
+SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/Star_Bots_Tamil_Support') #Support group link ( make sure bot is admin )
 #---------------------------------------------------------------
 #---------------------------------------------------------------
-IS_VERIFY = is_enabled('IS_VERIFY', False)
+IS_VERIFY = is_enabled('IS_VERIFY', True)
 #---------------------------------------------------------------
-TUTORIAL = environ.get("TUTORIAL", "https://t.me/")
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/How_downlode_dpbots/22")
 TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
 TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg")
-SHORTENER_API = environ.get("SHORTENER_API", "3097623f852197a9ce40d1212aaa8bbf2803e799")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'omegalinks.in')
-SHORTENER_API2 = environ.get("SHORTENER_API2", "3097623f852197a9ce40d1212aaa8bbf2803e799")
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", 'omegalinks.in')
-SHORTENER_API3 = environ.get("SHORTENER_API3", "3097623f852197a9ce40d1212aaa8bbf2803e799")
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", 'omegalinks.in')
+SHORTENER_API = environ.get("SHORTENER_API", "6b30ad861a51b05f8dc26311c5b72b5038f2cdee")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'publicearn.com')
+SHORTENER_API2 = environ.get("SHORTENER_API2", "")
+SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", '')
+SHORTENER_API3 = environ.get("SHORTENER_API3", "")
+SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", '')
 TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "14400"))
 THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "14400"))
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 LANGUAGES = ["tamil", "english", "telugu", "hindi", "kannada", "malayalam", "bengali", "marathi", "gujarati", "punjabi"]
-QUALITIES = ["HdRip","web-dl" ,"bluray", "hdr", "fhd" , "240p", "360p", "480p", "540p", "720p", "960p", "1080p", "1440p", "2K", "2160p", "4k", "5K", "8K"]
+QUALITIES = ["HDRip","WEB-DL" ,"Bluray", "HDR", "FHD" , "240p", "360p", "480p", "540p", "720p", "960p", "1080p", "1440p", "2K", "2160p", "4K", "5K", "8K"]
 YEARS = [f'{i}' for i in range(2024 , 2002,-1 )]
 SEASONS = [f'season {i}'for i in range (1 , 23)]
 REF_PREMIUM = 30

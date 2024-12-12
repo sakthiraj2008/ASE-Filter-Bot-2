@@ -25,42 +25,50 @@ async def index_files(bot, query):
         temp.CANCEL = True
         await query.message.edit("Trying to cancel Indexing...")
 
-@Client.on_message(filters.private & filters.incoming & filters.user(ADMINS))
+@Client.on_message((filters.forwarded | (filters.regex("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")) & filters.text ) & filters.private & filters.incoming & filters.user(ADMINS))
 async def send_for_index(bot, message):
-    if lock.locked():
-        return await message.reply('Wait until previous process complete.')
-    if message.text and message.text.startswith("https://t.me"):
-        try:
-            msg_link = message.text.split("/")
-            last_msg_id = int(msg_link[-1])
-            chat_id = msg_link[-2]
-            if chat_id.isnumeric():
-                chat_id = int(("-100" + chat_id))
-        except:
-            await message.reply('Invalid message link!')
-            return
+    if message.text:
+        regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
+        match = regex.match(message.text)
+        if not match:
+            return await message.reply('Invalid link')
+        chat_id = match.group(4)
+        last_msg_id = int(match.group(5))
+        if chat_id.isnumeric(): 
+            chat_id  = int(("-100" + chat_id))
     elif message.forward_from_chat and message.forward_from_chat.type == enums.ChatType.CHANNEL:
         last_msg_id = message.forward_from_message_id
-        chat_id = message.forward_from_chat.username or message
+        chat_id = message.forward_from_chat.username or message.forward_from_chat.id
     else:
-        await message.reply('This is not forwarded message or link.')
         return
+
     try:
-        chat = await bot.get_chat(chat_id)
+        await bot.get_chat(chat_id)
+    except ChannelInvalid:
+        return await message.reply('This may be a private channel / group. Make me an admin over there to index the files.')
+    except (UsernameInvalid, UsernameNotModified):
+        return await message.reply('Invalid Link specified.')
     except Exception as e:
         return await message.reply(f'Errors - {e}')
+    
+    try:
+        k = await bot.get_messages(chat_id, last_msg_id)
+    except:
+        return await message.reply('Make Sure That I am an Admin in The Channel, if the channel is private.')
+    
+    if k.empty:
+        return await message.reply('This may be a group, and I am not an admin of the group.')
 
-    if chat.type != enums.ChatType.CHANNEL:
-        return await message.reply("I can index only channels.")
-
-    s = await message.reply("Send skip message number.")
+    # Ask the admin for skip message number
+    skip_msg = await message.reply("Please send the number of messages you want to skip.")
     msg = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
-    await s.delete()
+    await skip_msg.delete()
+    
     try:
         skip = int(msg.text)
     except:
-        return await message.reply("Number is invalid.")
-
+        return await message.reply("Invalid number entered for skip. Please try again.")
+    chat = await bot.get_chat(chat_id)
     buttons = [[
         InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}#{skip}')
     ],[
@@ -68,7 +76,7 @@ async def send_for_index(bot, message):
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
     await message.reply(f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>', reply_markup=reply_markup)
-    
+
 @Client.on_message(filters.command('channel'))
 async def channel_info(bot, message):
     if message.from_user.id not in ADMINS:

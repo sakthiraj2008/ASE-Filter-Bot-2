@@ -87,6 +87,16 @@ async def send_for_index(bot, message):
         reply_markup=reply_markup
     )
 
+@Client.on_message(filters.command('setskip') & filters.user(ADMINS))
+async def set_skip_number(bot, message):
+    if len(message.command) == 2:
+        try: skip = int(message.text.split(" ", 1)[1])
+        except: return await message.reply("Skip Number Should Be An Integer.")
+        await message.reply(f"Successfully Set Skip Number As {skip}")
+        temp.CURRENT = int(skip)
+    else:
+        await message.reply("Give Me A Skip Number")
+
 @Client.on_message(filters.command('channel'))
 async def channel_info(bot, message):
     if message.from_user.id not in ADMINS:

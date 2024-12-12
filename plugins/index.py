@@ -45,6 +45,7 @@ async def send_for_index(bot, message):
     try: k = await bot.get_messages(chat_id, last_msg_id)
     except: return await message.reply('Make Sure That Iam An Admin In The Channel, if channel is private')
     if k.empty: return await message.reply('This may be group and iam not a admin of the group.')
+    chat = bot.get_chat(chat_id)
     buttons = [[
         InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}')
     ],[

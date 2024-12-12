@@ -58,14 +58,22 @@ async def send_for_index(bot, message):
     if chat.type != ChatType.CHANNEL:
         return await message.reply("I can only index channels.")
 
-    # Ask for skip count
-    s = await message.reply("Send skip message number.")
-    skip_msg = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
-    await s.delete()
+    # Ask for skip message number
+    skip_msg = await message.reply("Send skip message number.")
     try:
-        skip = int(skip_msg.text)
-    except:
-        return await message.reply("Invalid number.")
+        skip_message = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
+        await skip_msg.delete()
+
+        try:
+            skip = int(skip_message.text)
+        except ValueError:
+            return await message.reply("Invalid number. Please enter a valid skip number.")
+        
+        if skip < 0:
+            return await message.reply("Skip number cannot be negative.")
+        
+    except TimeoutError:
+        return await message.reply("You took too long to provide a skip number.")
 
     # Confirmation buttons
     buttons = [[
@@ -75,7 +83,7 @@ async def send_for_index(bot, message):
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
     await message.reply(
-        f'Do you want to index the "{chat.title}" channel?\nTotal Messages: <code>{last_msg_id}</code>',
+        f'Do you want to index the "{chat.title}" channel?\nTotal Messages: <code>{last_msg_id}</code>\nSkip: <code>{skip}</code>',
         reply_markup=reply_markup
     )
 

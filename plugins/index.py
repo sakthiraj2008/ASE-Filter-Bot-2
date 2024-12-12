@@ -29,18 +29,9 @@ async def index_files(bot, query):
 async def send_for_index(bot, message):
     if lock.locked():
         return await message.reply('Wait until previous process complete.')
-    
-    msg = message
-    
-    # Check if the message is a forwarded message from a channel
-    if msg.forward_from_chat and msg.forward_from_chat.type == enums.ChatType.CHANNEL:
-        # Forwards from a channel, check for forwarded message ID
-        last_msg_id = msg.forward_from_message_id
-        chat_id = msg.forward_from_chat.username or msg.forward_from_chat.id
-    # Check if the message contains a link to a Telegram message
-    elif msg.text and msg.text.startswith("https://t.me"):
+    if message.text and message.text.startswith("https://t.me"):
         try:
-            msg_link = msg.text.split("/")
+            msg_link = message.text.split("/")
             last_msg_id = int(msg_link[-1])
             chat_id = msg_link[-2]
             if chat_id.isnumeric():
@@ -48,50 +39,35 @@ async def send_for_index(bot, message):
         except:
             await message.reply('Invalid message link!')
             return
-    # Check if the message contains forwarded media (file, image, video)
-    elif msg.document or msg.photo or msg.video:
-        # If it's a media, determine the chat ID from the forwarded message's chat
-        if msg.forward_from_chat and msg.forward_from_chat.type == enums.ChatType.CHANNEL:
-            last_msg_id = msg.forward_from_message_id
-            chat_id = msg.forward_from_chat.username or msg.forward_from_chat.id
-        else:
-            await message.reply('This is not a forwarded media message from a channel.')
-            return
+    elif message.forward_from_chat and message.forward_from_chat.type == enums.ChatType.CHANNEL:
+        last_msg_id = message.forward_from_message_id
+        chat_id = message.forward_from_chat.username or message
     else:
-        await message.reply('This is not a forwarded message or link.')
+        await message.reply('This is not forwarded message or link.')
         return
-
     try:
         chat = await bot.get_chat(chat_id)
     except Exception as e:
-        return await message.reply(f'Error fetching chat: {e}')
+        return await message.reply(f'Errors - {e}')
 
     if chat.type != enums.ChatType.CHANNEL:
         return await message.reply("I can index only channels.")
-    
-    # Ask the user to input the skip message number
+
     s = await message.reply("Send skip message number.")
     msg = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
     await s.delete()
-    
     try:
         skip = int(msg.text)
     except:
         return await message.reply("Number is invalid.")
-    buttons = [
-        [
-            InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}#{skip}')
-        ],
-        [
-            InlineKeyboardButton('CLOSE', callback_data='close_data'),
-        ]
-    ]
+
+    buttons = [[
+        InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}#{skip}')
+    ],[
+        InlineKeyboardButton('CLOSE', callback_data='close_data'),
+    ]]
     reply_markup = InlineKeyboardMarkup(buttons)
-    
-    await message.reply(
-        f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>', 
-        reply_markup=reply_markup
-    )
+    await message.reply(f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>', reply_markup=reply_markup)
     
 @Client.on_message(filters.command('channel'))
 async def channel_info(bot, message):

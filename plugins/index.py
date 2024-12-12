@@ -6,7 +6,8 @@ from info import ADMINS, LOG_CHANNEL, CHANNELS
 from database.ia_filterdb import save_file
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils import temp, get_readable_time
-import time
+import time, re
+from pyrogram.enums import ChatType
 
 lock = asyncio.Lock()
 
@@ -25,35 +26,64 @@ async def index_files(bot, query):
         temp.CANCEL = True
         await query.message.edit("Trying to cancel Indexing...")
 
-@Client.on_message((filters.forwarded | (filters.regex("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")) & filters.text ) & filters.private & filters.incoming & filters.user(ADMINS))
-async def send_for_index(bot, message):
+@Client.on_message((filters.forwarded | (filters.regex(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")) & filters.text) & filters.private & filters.incoming & filters.user(ADMINS))
+async def send_for_index(client, message):
     if message.text:
-        regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
+        # Using regex to validate and extract group ID and message ID
+        regex = re.compile(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
         match = regex.match(message.text)
-        if not match: return await message.reply('Invalid link')
+        if not match:
+            return await message.reply('Invalid link')
+
         chat_id = match.group(4)
         last_msg_id = int(match.group(5))
-        if chat_id.isnumeric(): chat_id  = int(("-100" + chat_id))
-    elif message.forward_from_chat.type == enums.ChatType.CHANNEL:
+        
+        if chat_id.isnumeric():
+            chat_id = int("-100" + chat_id)  # Convert chat ID to proper format
+    elif message.forward_from_chat and message.forward_from_chat.type == ChatType.CHANNEL:
+        # Handle forwarded messages from channels
         last_msg_id = message.forward_from_message_id
         chat_id = message.forward_from_chat.username or message.forward_from_chat.id
-    else: return
-    try: await bot.get_chat(chat_id)
-    except ChannelInvalid: return await message.reply('This may be a private channel / group. Make me an admin over there to index the files.')
-    except (UsernameInvalid, UsernameNotModified): return await message.reply('Invalid Link specified.')
-    except Exception as e: return await message.reply(f'Errors - {e}')
-    try: k = await bot.get_messages(chat_id, last_msg_id)
-    except: return await message.reply('Make Sure That Iam An Admin In The Channel, if channel is private')
-    if k.empty: return await message.reply('This may be group and iam not a admin of the group.')
-    chat = bot.get_chat(chat_id)
-    buttons = [[
-        InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}')
-    ],[
-        InlineKeyboardButton('CLOSE', callback_data='close_data'),
-    ]]
-    reply_markup = InlineKeyboardMarkup(buttons)
-    await message.reply(f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>', reply_markup=reply_markup)
+    else:
+        return
 
+    # Validate the chat ID and ensure bot can access it
+    try:
+        chat = await client.get_chat(chat_id)
+    except ChannelInvalid:
+        return await message.reply('This may be a private channel / group. Make me an admin over there to index the files.')
+    except (UsernameInvalid, UsernameNotModified):
+        return await message.reply('Invalid Link specified.')
+    except Exception as e:
+        return await message.reply(f'Error: {e}')
+
+    # Attempt to fetch the specified message from the channel
+    try:
+        msg = await client.get_messages(chat_id, message_id=last_msg_id)
+    except Exception:
+        return await message.reply('Make sure that I am an admin in the channel, if the channel is private.')
+
+    # Check if the message exists
+    if not msg:
+        return await message.reply('This may be a group, and I am not an admin of the group.')
+
+    # Create the inline keyboard buttons
+    buttons = [
+        [
+            InlineKeyboardButton('YES', callback_data=f'index#yes#{chat_id}#{last_msg_id}')
+        ],
+        [
+            InlineKeyboardButton('CLOSE', callback_data='close_data')
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(buttons)
+
+    # Send the reply with buttons
+    await message.reply(
+        f'Do you want to index {chat.title} channel?\nTotal Messages: <code>{last_msg_id}</code>',
+        reply_markup=reply_markup
+    )
+    
 @Client.on_message(filters.command('set_skip') & filters.user(ADMINS))
 async def set_skip_number(bot, message):
     if len(message.command) == 2:

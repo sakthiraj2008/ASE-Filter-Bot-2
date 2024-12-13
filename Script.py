@@ -355,8 +355,10 @@ User - {}"""
 
 -------------Time Settings------------
 ➩ /set_time_2 - Set a second time parameter
-➩ /set_time_3 - Set a third time parameter
+➩ /set_time_3 - Set a third time parameter</b>"""
 
+
+    ADMIN_CMD_TXT4 = """<b>
 -------------Referral System----------
 ➩ /refer - Handle referral system
 

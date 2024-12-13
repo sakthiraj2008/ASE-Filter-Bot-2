@@ -962,13 +962,14 @@ async def cb_handler(client: Client, query: CallbackQuery):
           )
 
     elif query.data == "admincmd2":
+
       buttons = [[
 	      InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='admincmd'),
 	      InlineKeyboardButton('ɴᴇxᴛ ⪼', callback_data='admincmd3'),
       ]]
       reply_markup = InlineKeyboardMarkup(buttons)
     
-       await client.edit_message_media(
+      await client.edit_message_media(
           chat_id=query.message.chat.id,
           message_id=query.message.id,
           media=InputMediaAnimation(

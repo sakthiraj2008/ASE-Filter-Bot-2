@@ -44,17 +44,17 @@ SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/Star_Bots_Tamil_Support
 IS_VERIFY = is_enabled('IS_VERIFY', True)
 #---------------------------------------------------------------
 TUTORIAL = environ.get("TUTORIAL", "https://t.me/How_downlode_dpbots/22")
-TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
-TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
+#TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
+#TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg")
 SHORTENER_API = environ.get("SHORTENER_API", "6b30ad861a51b05f8dc26311c5b72b5038f2cdee")
 SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'publicearn.com')
-SHORTENER_API2 = environ.get("SHORTENER_API2", "")
-SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", '')
-SHORTENER_API3 = environ.get("SHORTENER_API3", "")
-SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", '')
+#SHORTENER_API2 = environ.get("SHORTENER_API2", "")
+#SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", '')
+#SHORTENER_API3 = environ.get("SHORTENER_API3", "")
+#SHORTENER_WEBSITE3 = environ.get("SHORTENER_WEBSITE3", '')
 TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "14400"))
-THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "14400"))
+#THREE_VERIFY_GAP = int(environ.get('THREE_VERIFY_GAP', "14400"))
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 LANGUAGES = ["tamil", "english", "telugu", "hindi", "kannada", "malayalam", "bengali", "marathi", "gujarati", "punjabi"]
@@ -82,7 +82,7 @@ FILE_AUTO_DEL_TIMER = int(environ.get('FILE_AUTO_DEL_TIMER', '600'))
 AUTO_FILTER = is_enabled('AUTO_FILTER', True)
 IS_PM_SEARCH = is_enabled('IS_PM_SEARCH', True)
 IS_SEND_MOVIE_UPDATE = is_enabled('IS_SEND_MOVIE_UPDATE', True) # Don't Change It ( If You Want To Turn It On Then Turn It On By Commands) We Suggest You To Make It Turn Off If You Are Indexing Files First Time.
-PORT = environ.get('PORT', '80')
+PORT = environ.get('PORT', '8080')
 MAX_BTN = int(environ.get('MAX_BTN', '5'))
 AUTO_DELETE = is_enabled('AUTO_DELETE', True)
 DELETE_TIME = int(environ.get('DELETE_TIME', 1200))
@@ -119,20 +119,20 @@ SETTINGS = {
             'template': IMDB_TEMPLATE,
             'caption': FILE_CAPTION,
             'tutorial': TUTORIAL,
-            'tutorial_2': TUTORIAL_2,
-            'tutorial_3': TUTORIAL_3,
+            #'tutorial_2': TUTORIAL_2,
+            #'tutorial_3': TUTORIAL_3,
             'shortner': SHORTENER_WEBSITE,
             'api': SHORTENER_API,
-            'shortner_two': SHORTENER_WEBSITE2,
-            'api_two': SHORTENER_API2,
+            #'shortner_two': SHORTENER_WEBSITE2,
+            #'api_two': SHORTENER_API2,
             'log': LOG_VR_CHANNEL,
             'imdb': IMDB,
             'link': LINK_MODE, 
             'is_verify': IS_VERIFY, 
             'verify_time': TWO_VERIFY_GAP,
-            'shortner_three': SHORTENER_WEBSITE3,
-            'api_three': SHORTENER_API3,
-            'third_verify_time': THREE_VERIFY_GAP
+            #'shortner_three': SHORTENER_WEBSITE3,
+            #'api_three': SHORTENER_API3,
+            #'third_verify_time': THREE_VERIFY_GAP
 }
 
 admin_cmds = [

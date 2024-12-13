@@ -114,9 +114,6 @@ async def start(client:Client, message):
                         ],[
                             InlineKeyboardButton('Pʀᴇᴍɪᴜᴍ 🎫', callback_data='seeplans'),
                             InlineKeyboardButton('Rᴇғᴇʀ ⚜️', callback_data="reffff")
-                        ],[
-                            InlineKeyboardButton('Mᴏsᴛ Sᴇᴀʀᴄʜ 🔍', callback_data="mostsearch"),
-                            InlineKeyboardButton('Tᴏᴘ Tʀᴇɴᴅɪɴɢ ⚡', callback_data="trending")
                         ]] 
                         reply_markup = InlineKeyboardMarkup(buttons)
                         await message.reply_photo(photo=random.choice(START_IMG), caption=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
@@ -140,9 +137,6 @@ async def start(client:Client, message):
                         ],[
                             InlineKeyboardButton('Pʀᴇᴍɪᴜᴍ 🎫', callback_data='seeplans'),
                             InlineKeyboardButton('Rᴇғᴇʀ ⚜️', callback_data="reffff")
-                        ],[
-                            InlineKeyboardButton('Mᴏsᴛ Sᴇᴀʀᴄʜ 🔍', callback_data="mostsearch"),
-                            InlineKeyboardButton('Tᴏᴘ Tʀᴇɴᴅɪɴɢ ⚡', callback_data="trending")
                         ]] 
         reply_markup = InlineKeyboardMarkup(buttons)
         m=await message.reply_sticker("CAACAgQAAxkBAAEn9_ZmGp1uf1a38UrDhitnjOOqL1oG3gAC9hAAAlC74FPEm2DxqNeOmB4E") 
@@ -202,9 +196,6 @@ async def start(client:Client, message):
                         ],[
                             InlineKeyboardButton('Pʀᴇᴍɪᴜᴍ 🎫', callback_data='seeplans'),
                             InlineKeyboardButton('Rᴇғᴇʀ ⚜️', callback_data="reffff")
-                        ],[
-                            InlineKeyboardButton('Mᴏsᴛ Sᴇᴀʀᴄʜ 🔍', callback_data="mostsearch"),
-                            InlineKeyboardButton('Tᴏᴘ Tʀᴇɴᴅɪɴɢ ⚡', callback_data="trending")
                         ]] 
         reply_markup = InlineKeyboardMarkup(buttons)
         return await message.reply_photo(photo=START_IMG, caption=script.START_TXT.format(message.from_user.mention, get_status(), message.from_user.id),
@@ -773,52 +764,6 @@ async def set_time_3(client, message):
         return await message.reply_text("Command Incomplete!")   
     await save_group_settings(grp_id, 'third_verify_time', time)
     await message.reply_text(f"Successfully set 1st verify time for {title}\n\nTime is - <code>{time}</code>")
-
-
-@Client.on_callback_query(filters.regex("mostsearch"))
-async def most(client, callback_query):
-    def is_alphanumeric(string):
-        return bool(re.match('^[a-zA-Z0-9 ]*$', string))
-    limit = 20  
-    top_messages = await mdb.get_top_messages(limit)
-    seen_messages = set()
-    truncated_messages = []
-    for msg in top_messages:
-        msg_lower = msg.lower()
-        if msg_lower not in seen_messages and is_alphanumeric(msg):
-            seen_messages.add(msg_lower)
-            
-            if len(msg) > 35:
-                truncated_messages.append(msg[:32] + "...")
-            else:
-                truncated_messages.append(msg)
-
-   
-    keyboard = [truncated_messages[i:i+2] for i in range(0, len(truncated_messages), 2)]
-    
-    reply_markup = ReplyKeyboardMarkup(
-        keyboard, 
-        one_time_keyboard=True, 
-        resize_keyboard=True, 
-        placeholder="Most searches of the day"
-    )
-    
-    await callback_query.message.reply_text("<b>Hᴇʀᴇ ɪꜱ ᴛʜᴇ ᴍᴏꜱᴛ ꜱᴇᴀʀᴄʜᴇꜱ ʟɪꜱᴛ 👇</b>", reply_markup=reply_markup)
-    await callback_query.answer()
-
-
-@Client.on_callback_query(filters.regex(r"^trending$"))
-async def top(client, query):
-    movie_series_names = await movie_series_db.get_movie_series_names(1)
-    if not movie_series_names:
-        await query.message.reply("Tʜᴇʀᴇ ᴀʀᴇ ɴᴏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇs ᴀᴠᴀɪʟᴀʙʟᴇ ғᴏʀ ᴛʜᴇ ᴛᴏᴘ sᴇᴀʀᴄʜᴇs.")
-        return
-    buttons = [movie_series_names[i:i + 2] for i in range(0, len(movie_series_names), 2)]
-    spika = ReplyKeyboardMarkup(
-        buttons,
-        resize_keyboard=True
-    )
-    await query.message.reply("<b>Here Is The Top Trending List 👇</b>", reply_markup=spika)
     
 @Client.on_message(filters.command("refer"))
 async def refer(bot, message):

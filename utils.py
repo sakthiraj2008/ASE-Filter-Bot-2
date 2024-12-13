@@ -201,25 +201,20 @@ def list_to_str(k):
     else:
         return ', '.join(str(item) for item in k)
 
-
-async def get_shortlink(link, grp_id, is_second_shortener=False, is_third_shortener=False , pm_mode=False):
+async def get_shortlink(link, grp_id, pm_mode=False):
     if not pm_mode:
         settings = await get_settings(grp_id)
     else:
         settings = SETTINGS
     if IS_VERIFY:
-        if is_third_shortener:             
-            api, site = settings['api_three'], settings['shortner_three']
-        else:
-            if is_second_shortener:
-                api, site = settings['api_two'], settings['shortner_two']
-            else:
-                api, site = settings['api'], settings['shortner']
+        api, site = settings['api'], settings['shortner']
+
         shortzy = Shortzy(api, site)
         try:
-            link = await shortzy.convert(link)
+            link = await shortzy.convert(link)  # Attempt to convert the link
         except Exception as e:
-            link = await shortzy.get_quick_link(link)
+            link = await shortzy.get_quick_link(link)  # Fallback to quick link if conversion fails
+
     return link
 
 def get_file_id(message: "Message") -> Any:
@@ -248,11 +243,11 @@ def get_status():
     tz = pytz.timezone('Asia/Colombo')
     hour = datetime.now(tz).time().hour
     if 5 <= hour < 12:
-        sts = "𝐺𝑜𝑜𝑑 𝑀𝑜𝑟𝑛𝑖𝑛𝑔"
+        sts = "Good Morning"
     elif 12 <= hour < 18:
-        sts = "𝐺𝑜𝑜𝑑 𝐴𝑓𝑡𝑒𝑟𝑛𝑜𝑜𝑛"
+        sts = "Good Afternoon"
     else:
-        sts = "𝐺𝑜𝑜𝑑 𝐸𝑣𝑒𝑛𝑖𝑛𝑔"
+        sts = "Good Evening"
     return sts
 
 async def is_check_admin(bot, chat_id, user_id):

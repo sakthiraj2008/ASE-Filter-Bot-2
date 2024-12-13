@@ -115,7 +115,7 @@ User - {}"""
 ⭐ Rating: {rating} / 10</b>
 """
 
-    FILE_CAPTION = """<b>{file_caption}\n\nJoin ➥ <a href="https://t.me/Movies_Dayz">Movies Dayz</a></b>"""
+    FILE_CAPTION = """<b>@Movies_Dayz - {file_name}\n\nJoin ➥ <a href="https://t.me/Movies_Dayz">Movies Dayz</a></b>"""
     
 
     ALRT_TXT = """ᴊᴀʟᴅɪ ʏᴇʜᴀ sᴇ ʜᴀᴛᴏ !"""

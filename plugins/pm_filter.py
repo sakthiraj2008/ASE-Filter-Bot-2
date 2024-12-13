@@ -981,15 +981,33 @@ async def cb_handler(client: Client, query: CallbackQuery):
       )
     elif query.data == "admincmd3":
        buttons = [[
-	      InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='admincmd2')]]
+	       InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='admincmd2'),
+	       InlineKeyboardButton('ɴᴇxᴛ ⪼', callback_data='admincmd4'),
+       ]]
        reply_markup = InlineKeyboardMarkup(buttons)
-    
+
        await client.edit_message_media(
           chat_id=query.message.chat.id,
           message_id=query.message.id,
           media=InputMediaAnimation(
             media="https://cdn.jsdelivr.net/gh/Jisshubot/JISSHU_BOTS/Video.mp4/Welcome_video_20240921_184741_0001.gif",
             caption=script.ADMIN_CMD_TXT3,
+            parse_mode=enums.ParseMode.HTML
+          ),
+          reply_markup=reply_markup
+       )
+    elif query.data == "admincmd4":
+       buttons = [[
+	       InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='admincmd3'),
+	       InlineKeyboardButton('Help ⪼', callback_data='features'),
+       ]]
+       reply_markup = InlineKeyboardMarkup(buttons)    
+       await client.edit_message_media(
+          chat_id=query.message.chat.id,
+          message_id=query.message.id,
+          media=InputMediaAnimation(
+            media="https://cdn.jsdelivr.net/gh/Jisshubot/JISSHU_BOTS/Video.mp4/Welcome_video_20240921_184741_0001.gif",
+            caption=script.ADMIN_CMD_TXT4,
             parse_mode=enums.ParseMode.HTML
           ),
           reply_markup=reply_markup

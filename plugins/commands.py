@@ -38,7 +38,6 @@ async def invite(client, message):
         print(f'Error while generating invite link : {e}\nFor chat:{toGenInvLink}')
         await message.reply(f'Error while generating invite link : {e}\nFor chat:{toGenInvLink}')
 
-
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message):
     pm_mode = False
@@ -61,25 +60,21 @@ async def start(client:Client, message):
             return  
         ist_timezone = pytz.timezone('Asia/Kolkata')
         if await db.user_verified(user_id):
-            key = "third_time_verified"
+            key = "last_verified"  # Always set to "last_verified" as we are now doing only one verification
         else:
-            key = "second_time_verified" if await db.is_user_verified(user_id) else "last_verified"
+            key = "last_verified"  # Set to the same "last_verified" if not already verified
         current_time = dt.now(tz=ist_timezone)
-        result = await db.update_notcopy_user(user_id, {key:current_time})
-        await db.update_verify_id_info(user_id, verify_id, {"verified":True})
-        if key == "third_time_verified": 
-            num = 3 
-        else: 
-            num =  2 if key == "second_time_verified" else 1 
-        if key == "third_time_verified":
-            msg = script.THIRDT_VERIFY_COMPLETE_TEXT
-        else:
-            msg = script.SECOND_VERIFY_COMPLETE_TEXT if key == "second_time_verified" else script.VERIFY_COMPLETE_TEXT
-        await client.send_message(settings['log'], script.VERIFIED_LOG_TEXT.format(m.from_user.mention, user_id, dt.now(pytz.timezone('Asia/Kolkata')).strftime('%d %B %Y'), num))
+        result = await db.update_notcopy_user(user_id, {key: current_time})
+        await db.update_verify_id_info(user_id, verify_id, {"verified": True})
+
+        msg = script.VERIFY_COMPLETE_TEXT  # Only one verification message, no need for second or third
+
+        await client.send_message(settings['log'], script.VERIFIED_LOG_TEXT.format(m.from_user.mention, user_id, dt.now(pytz.timezone('Asia/Kolkata')).strftime('%d %B %Y'), 1))
+        
         btn = [[
             InlineKeyboardButton("‼️ ᴄʟɪᴄᴋ ʜᴇʀᴇ ᴛᴏ ɢᴇᴛ ꜰɪʟᴇ ‼️", url=f"https://telegram.me/{temp.U_NAME}?start=file_{grp_id}_{file_id}"),
         ]]
-        reply_markup=InlineKeyboardMarkup(btn)
+        reply_markup = InlineKeyboardMarkup(btn)
         await m.reply_photo(
             photo=(VERIFY_IMG),
             caption=msg.format(message.from_user.mention, get_readable_time(TWO_VERIFY_GAP)),

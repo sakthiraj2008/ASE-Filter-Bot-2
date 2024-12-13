@@ -131,15 +131,15 @@ class Database:
         user = await self.misc.find_one({"user_id": user_id})
         ist_timezone = pytz.timezone('Asia/Kolkata')
         if not user:
+            # Default to a last_verified field for one-time verification
             res = {
                 "user_id": user_id,
                 "last_verified": datetime.datetime(2020, 5, 17, 0, 0, 0, tzinfo=ist_timezone),
-                "second_time_verified": datetime.datetime(2019, 5, 17, 0, 0, 0, tzinfo=ist_timezone),
             }
             user = await self.misc.insert_one(res)
         return user
 
-    async def update_notcopy_user(self, user_id, value:dict):
+    async def update_notcopy_user(self, user_id, value: dict):
         user_id = int(user_id)
         myquery = {"user_id": user_id}
         newvalues = {"$set": value}
@@ -163,10 +163,10 @@ class Database:
     async def user_verified(self, user_id):
         user = await self.get_notcopy_user(user_id)
         try:
-            pastDate = user["second_time_verified"]
+            pastDate = user["last_verified"]
         except Exception:
             user = await self.get_notcopy_user(user_id)
-            pastDate = user["second_time_verified"]
+            pastDate = user["last_verified"]
         ist_timezone = pytz.timezone('Asia/Kolkata')
         pastDate = pastDate.astimezone(ist_timezone)
         current_time = datetime.datetime.now(tz=ist_timezone)
@@ -175,12 +175,10 @@ class Database:
         total_seconds = time_diff.total_seconds()
         return total_seconds <= seconds_since_midnight
 
-    async def use_second_shortener(self, user_id, time):
+    # Removing the use of second_time_verified and third_time_verified
+
+    async def use_shortener(self, user_id, time):
         user = await self.get_notcopy_user(user_id)
-        if not user.get("second_time_verified"):
-            ist_timezone = pytz.timezone('Asia/Kolkata')
-            await self.update_notcopy_user(user_id, {"second_time_verified":datetime.datetime(2019, 5, 17, 0, 0, 0, tzinfo=ist_timezone)})
-            user = await self.get_notcopy_user(user_id)
         if await self.is_user_verified(user_id):
             try:
                 pastDate = user["last_verified"]
@@ -192,33 +190,11 @@ class Database:
             current_time = datetime.datetime.now(tz=ist_timezone)
             time_difference = current_time - pastDate
             if time_difference > datetime.timedelta(seconds=time):
+                # Now using only last_verified, no need for second or third time verification
                 pastDate = user["last_verified"].astimezone(ist_timezone)
-                second_time = user["second_time_verified"].astimezone(ist_timezone)
-                return second_time < pastDate
+                return pastDate < current_time
         return False
-
-    async def use_third_shortener(self, user_id, time):
-        user = await self.get_notcopy_user(user_id)
-        if not user.get("third_time_verified"):
-            ist_timezone = pytz.timezone('Asia/Kolkata')
-            await self.update_notcopy_user(user_id, {"third_time_verified":datetime.datetime(2018, 5, 17, 0, 0, 0, tzinfo=ist_timezone)})
-            user = await self.get_notcopy_user(user_id)
-        if await self.user_verified(user_id):
-            try:
-                pastDate = user["second_time_verified"]
-            except Exception:
-                user = await self.get_notcopy_user(user_id)
-                pastDate = user["second_time_verified"]
-            ist_timezone = pytz.timezone('Asia/Kolkata')
-            pastDate = pastDate.astimezone(ist_timezone)
-            current_time = datetime.datetime.now(tz=ist_timezone)
-            time_difference = current_time - pastDate
-            if time_difference > datetime.timedelta(seconds=time):
-                pastDate = user["second_time_verified"].astimezone(ist_timezone)
-                second_time = user["third_time_verified"].astimezone(ist_timezone)
-                return second_time < pastDate
-        return False
-   
+        
     async def create_verify_id(self, user_id: int, hash):
         res = {"user_id": user_id, "hash":hash, "verified":False}
         return await self.verify_id.insert_one(res)

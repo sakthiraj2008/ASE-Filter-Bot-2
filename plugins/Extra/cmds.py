@@ -6,7 +6,7 @@ from Script import script
 from info import ADMINS, admin_cmds, cmds
 
 
-@Client.on_message(filters.command('grp_cmds'))
+@Client.on_message(filters.command('grp_cmds1'))
 async def grp_cmds(client, message):
     user_id = message.from_user.id if message.from_user else None
     if not user_id:
@@ -28,7 +28,7 @@ async def grp_cmds(client, message):
         )
     
 
-@Client.on_message(filters.command("admin_cmds") & filters.user(ADMINS))
+@Client.on_message(filters.command("admin_cmds1") & filters.user(ADMINS))
 async def admin_cmds(client, message):
     buttons = []
     for i in range(0, len(admin_cmds), 2):
@@ -49,7 +49,7 @@ async def admin_cmds(client, message):
     await message.delete()
 
 
-@Client.on_message(filters.command("commands") & filters.user(ADMINS))
+@Client.on_message(filters.command("set_commands") & filters.user(ADMINS))
 async def set_commands(client, message):
     commands = []
     for item in vp:

@@ -44,8 +44,8 @@ Aᴍᴏᴜɴᴛ:</b> {num_codes}
 
         keyboard = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("♻️ Redeem Here ♻️", url="http://t.me/NehaTestBot")],
-                [InlineKeyboardButton("❕ Any Query ❕", url="https://t.me/IM_JISSHU")]
+                [InlineKeyboardButton("♻️ Redeem Here ♻️", url="http://t.me/Star_Moviess_Bot")],
+                [InlineKeyboardButton("❕ Any Query ❕", url="https://t.me/U_Karthik")]
             ]
         )
 
@@ -110,4 +110,4 @@ async def redeem_code(client, message):
         else:
             await message.reply_text("Invalid Redeem Code or Expired.")
     else:
-        await message.reply_text("Usage: /redeem <code>")
+        await message.reply_text("Usage: <code>/redeem {code} </code>")

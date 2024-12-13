@@ -283,33 +283,104 @@ User - {}"""
 ➩ /add_redeem - Generate a redeem code
 ➩ /premium_users - List all premium users
 ➩ /refresh - Refresh free trial for users
+
 -------------Update Channel----------
 ➩ /set_muc {channel ID} - Set the movies update channel
+
 --------------PM Search--------------
 ➩ /pm_search_on - Enable PM search
 ➩ /pm_search_off - Disable PM search
+
 --------------Verify ID--------------
 ➩ /verify_id - Generate a verification ID for group use only
+
 --------------Set Ads----------------
 ➩ /set_ads {ads name}}#{Times}#{photo URL} - <a href="https://t.me/Jisshu_developer/11">Explain</a>
 ➩ /del_ads - Delete ads
--------------Top Trending------------
-➩ /setlist {Mirzapur, Money Heist} - <a href=https://t.me/Jisshu_developer/10>Explain</a>
-➩ /clearlist - Clear all lists</b>"""
+
+-------------Movie Management--------
+➩ /link - Fetch movie using a provided link
+➩ /most - Display the most viewed movies
+➩ /add_redeem - Add a new redeem code
+➩ /redeem - Redeem a code for a reward
+➩ /streams - View active movie streams
+
+-------------Subscription Management--
+➩ /fsub - Add a new subscription
+➩ /show_fsub - Display all subscriptions
+➩ /del_fsub - Delete a subscription
+➩ /myplan - View your subscription plan
+➩ /plan - View or modify subscription plan
+
+-------------User Management----------
+➩ /ban - Ban a user
+➩ /unban - Unban a user
+➩ /font - Change font settings
+➩ /stats - View statistics or analytics
+➩ /details - View detailed information</b>"""
 
     ADMIN_CMD_TXT2 = """<b>
---------------Index File--------------
-➩ /index - Index all files
---------------Leave Link--------------
+-------------Group Management---------
 ➩ /leave {group ID} - Leave the specified group
+➩ /groups - Manage groups
+➩ /reset_group - Reset group settings
+
 -------------Send Message-------------
 ➩ /send {user-name} - Use this command as a reply to any message
-----------------Ban User---------------
-➩ /ban {user-name} - Ban user 
-➩ /unban {user-name} - Unban user
---------------Broadcast--------------
-➩ /broadcast - Broadcast a message to all users
-➩ /grp_broadcast - Broadcast a message to all connected groups</b>"""
+
+-------------User Management----------
+➩ /ban - Ban a user
+➩ /unban - Unban a user
+➩ /font - Change font settings
+➩ /stats - View statistics or analytics
+➩ /details - View detailed information
+
+-------------Settings-----------------
+➩ /settings - View or change settings
+➩ /set_template - Set a template for messages
+➩ /deletefiles - Delete files from storage
+➩ /del_file - Delete a specific file
+
+-------------Broadcasting------------
+➩ /broadcast - Send a broadcast message
+➩ /grp_broadcast - Send broadcast to groups
+➩ /invite - Send an invite link
+
+-------------Group Management---------
+➩ /leave - Exit from the group or service
+➩ /groups - Manage groups
+➩ /reset_group - Reset group settings
+
+-------------File Management----------
+➩ /delete - Delete a specific item
+➩ /deleteall - Delete all items
+
+-------------Logging------------------
+➩ /set_log - Set logging preferences
+
+-------------Time Settings------------
+➩ /set_time_2 - Set a second time parameter
+➩ /set_time_3 - Set a third time parameter
+
+-------------Referral System----------
+➩ /refer - Handle referral system
+
+-------------Verification-------------
+➩ /set_verify - Set verification settings
+➩ /set_verify_2 - Set second-level verification
+➩ /set_verify_3 - Set third-level verification
+➩ /verifyon - Enable verification
+➩ /verifyoff - Disable verification
+
+-------------Channel Management-------
+➩ /id - View or set the ID
+➩ /channel - Manage channel settings
+
+-------------Skip Options-------------
+➩ /setskip - Set skip options
+
+-------------Request Management-------
+➩ /delreq - Delete a request</b>"""
     
     GROUP_TEXT = """<b>
  --------------Set Verify-------------

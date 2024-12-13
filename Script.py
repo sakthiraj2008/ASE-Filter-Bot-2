@@ -303,9 +303,10 @@ User - {}"""
 ➩ /most - Display the most viewed movies
 ➩ /add_redeem - Add a new redeem code
 ➩ /redeem - Redeem a code for a reward
-➩ /streams - View active movie streams
+➩ /streams - View active movie streams</b>"""
 
--------------Subscription Management--
+    ADMIN_CMD_TXT2 = """<b>
+----------Subscription Management-----
 ➩ /fsub - Add a new subscription
 ➩ /show_fsub - Display all subscriptions
 ➩ /del_fsub - Delete a subscription
@@ -317,9 +318,8 @@ User - {}"""
 ➩ /unban - Unban a user
 ➩ /font - Change font settings
 ➩ /stats - View statistics or analytics
-➩ /details - View detailed information</b>"""
+➩ /details - View detailed information
 
-    ADMIN_CMD_TXT2 = """<b>
 -------------Group Management---------
 ➩ /leave {group ID} - Leave the specified group
 ➩ /groups - Manage groups
@@ -328,19 +328,14 @@ User - {}"""
 -------------Send Message-------------
 ➩ /send {user-name} - Use this command as a reply to any message
 
--------------User Management----------
-➩ /ban - Ban a user
-➩ /unban - Unban a user
-➩ /font - Change font settings
-➩ /stats - View statistics or analytics
-➩ /details - View detailed information
-
 -------------Settings-----------------
 ➩ /settings - View or change settings
 ➩ /set_template - Set a template for messages
 ➩ /deletefiles - Delete files from storage
-➩ /del_file - Delete a specific file
+➩ /del_file - Delete a specific file</b>"""
 
+
+    ADMIN_CMD_TXT3 = """<b>
 -------------Broadcasting------------
 ➩ /broadcast - Send a broadcast message
 ➩ /grp_broadcast - Send broadcast to groups

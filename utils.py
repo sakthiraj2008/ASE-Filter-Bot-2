@@ -20,7 +20,7 @@ imdb = Cinemagoer()
  
 class temp(object):
     ME = None
-    CURRENT=int(os.environ.get("SKIP", 2))
+    CURRENT=int(os.environ.get("SKIP", 1))
     CANCEL = False
     U_NAME = None
     B_NAME = None
@@ -33,7 +33,7 @@ class temp(object):
     BANNED_USERS = []
     BANNED_CHATS = []
 def formate_file_name(file_name):
-    file_name = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file_name.split()))
+    file_name = ' '.join(filter(lambda x: not x.startswith('@') and not x.startswith('www.'), file_name.split()))
     return file_name
 async def is_req_subscribed(bot, query):
     if await db.find_join_req(query.from_user.id):

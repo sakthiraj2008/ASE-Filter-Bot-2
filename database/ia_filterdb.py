@@ -79,19 +79,24 @@ async def save_file(media):
 
 async def get_search_results(query, max_results=MAX_BTN, offset=0, lang=None):
     query = query.strip()
+    
     if not query:
         raw_pattern = '.'
     elif ' ' not in query:
         raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
     else:
-        raw_pattern = query.replace(' ', r'.*[\s\.\+\-_]') 
+        # Keep the spaces as they are, without converting to .*[\s\.\+\-_]
+        raw_pattern = query
+    
     try:
         regex = re.compile(raw_pattern, flags=re.IGNORECASE)
     except:
         regex = query
+    
     filter = {'file_name': regex}
     cursor = Media.find(filter)
     cursor.sort('$natural', -1)
+    
     if lang:
         lang_files = [file async for file in cursor if lang in file.file_name.lower()]
         files = lang_files[offset:][:max_results]
@@ -100,6 +105,7 @@ async def get_search_results(query, max_results=MAX_BTN, offset=0, lang=None):
         if next_offset >= total_results:
             next_offset = ''
         return files, next_offset, total_results
+    
     cursor.skip(offset).limit(max_results)
     files = await cursor.to_list(length=max_results)
     total_results = await Media.count_documents(filter)
@@ -107,7 +113,7 @@ async def get_search_results(query, max_results=MAX_BTN, offset=0, lang=None):
     if next_offset >= total_results:
         next_offset = ''       
     return files, next_offset, total_results
-    
+
 async def get_bad_files(query, file_type=None, offset=0, filter=False):
     query = query.strip()
     if not query:

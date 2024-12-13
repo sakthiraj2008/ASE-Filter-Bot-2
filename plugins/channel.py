@@ -71,7 +71,7 @@ async def send_movie_updates(bot, file_name, caption, file_id):
             return 
         processed_movies.add(movie_name)    
         poster_url = await get_imdb(movie_name)
-        caption_message = f"<b>Movie :- <code>{movie_name}</code>\n\nLanguage :- {language}\n\nQuality :- {quality}\n\n📤 Uploading By :- <a href=https://t.me/Movies_Dayz>Movies Dayz</a>\n⚡ Powered By :- <a href=https://t.me/Star_Moviess_Tamil>Star Movies Tamil</a></b>" 
+        caption_message = f"<b>Movie :- <code>{movie_name}</code>\n\nLanguage :- {language}\n\nQuality :- {quality}\n\n<a href=https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}>📂 Get File 📂\n📂 Get File 📂</a>\n\n<a href=https://t.me/How_downlode_dpbots/22>📥 How to Download 📥</a>\n📤 Uploading By :- <a href=https://t.me/Movies_Dayz>Movies Dayz</a>\n⚡ Powered By :- <a href=https://t.me/Star_Moviess_Tamil>Star Movies Tamil</a></b>" 
         search_movie = movie_name.replace(" ", '-')
         movie_update_channel = await db.movies_update_channel_id()    
         btn = [[
@@ -86,7 +86,7 @@ async def send_movie_updates(bot, file_name, caption, file_id):
         else:
             no_poster = "https://telegra.ph/file/88d845b4f8a024a71465d.jpg"
             await bot.send_photo(movie_update_channel if movie_update_channel else MOVIE_UPDATE_CHANNEL, 
-                                 photo=no_poster, caption=caption_message, reply_markup=reply_markup)  
+                                 photo=no_poster, caption=caption_message)  
     except Exception as e:
         print('Failed to send movie update. Error - ', e)
         await bot.send_message(LOG_CHANNEL, f'Failed to send movie update. Error - {e}')

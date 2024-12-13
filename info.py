@@ -37,7 +37,7 @@ LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '0'))
 auth_channel = environ.get('AUTH_CHANNEL', '-1002008853384')
 SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '0'))
 request_channel = environ.get('REQUEST_CHANNEL', '-1001793064603') # If anyone sends a request message to your bot, you will get it in this channel.
-MOVIE_UPDATE_CHANNEL = [int(muc) if id_pattern.search(muc) else muc for muc in environ.get('MOVIE_UPDATE_CHANNEL', '-1002244141688 -1001715180239 -1001589399161').split()]
+MOVIE_UPDATE_CHANNEL = [int(muc) if id_pattern.search(muc) else muc for muc in environ.get('MOVIE_UPDATE_CHANNEL', '-1002244141688 -1001715180239 -1001589399161 -1001139111796 -1002097728232').split()]
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/Star_Bots_Tamil_Support') #Support group link ( make sure bot is admin )
 #---------------------------------------------------------------
 #---------------------------------------------------------------

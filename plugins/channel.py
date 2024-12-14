@@ -70,9 +70,13 @@ async def send_movie_updates(bot, file_name, caption, file_id):
         if movie_name in processed_movies:
             return 
         processed_movies.add(movie_name)    
-        poster_url = await get_imdb(movie_name)
-        caption_message = f"<b>Movie :- <code>{movie_name}</code>\n\nLanguage :- {language}\n\nQuality :- {quality}\n\n<a href=https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}>📂 Get File 📂\n📂 Get File 📂</a>\n\n<a href=https://t.me/How_downlode_dpbots/22>📥 How to Download 📥</a>\n📤 Uploading By :- <a href=https://t.me/Movies_Dayz>Movies Dayz</a>\n⚡ Powered By :- <a href=https://t.me/Star_Moviess_Tamil>Star Movies Tamil</a></b>" 
+
+        # Define `search_movie` here
         search_movie = movie_name.replace(" ", '-')
+        
+        poster_url = await get_imdb(movie_name)
+        caption_message = f"<b>Movie :- <code>{movie_name}</code>\n\nLanguage :- {language}\n\nQuality :- {quality}\n\n<a href=https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}>📂 Get File 📂\n📂 Get File 📂</a>\n\n<a href=https://t.me/How_downlode_dpbots/22>📥 How to Download 📥</a>\n📤 Uploading By :- <a href=https://t.me/Movies_Dayz>Movies Dayz</a>\n⚡ Powered By :- <a href=https://t.me/Star_Moviess_Tamil>Star Movies Tamil</a></b>"
+        
         movie_update_channel = await db.movies_update_channel_id()    
         btn = [[
             InlineKeyboardButton('📂 Get File 📂', url=f'https://telegram.me/{temp.U_NAME}?start=getfile-{search_movie}')
@@ -90,5 +94,4 @@ async def send_movie_updates(bot, file_name, caption, file_id):
     except Exception as e:
         print('Failed to send movie update. Error - ', e)
         await bot.send_message(LOG_CHANNEL, f'Failed to send movie update. Error - {e}')
-    
-  
+        

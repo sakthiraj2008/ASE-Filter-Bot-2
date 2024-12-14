@@ -204,6 +204,53 @@ async def start(client:Client, message):
         pre, grp_id, file_id = "", 0, data
 
     user_id = m.from_user.id
+    # Check if the user already has premium access
+    if not await db.has_premium_access(user_id):
+        grp_id = int(grp_id)
+        user_verified = await db.is_user_verified(user_id)
+
+        # Fetch group settings
+        settings = await get_settings(grp_id, pm_mode=pm_mode)
+        
+        # If verification is enabled and the user is not verified
+        if settings.get("is_verify", IS_VERIFY) and not user_verified:
+            # Generate a verification ID
+            verify_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
+            await db.create_verify_id(user_id, verify_id)
+            temp.CHAT[user_id] = grp_id
+
+            # Generate a short verification link
+            verify = await get_shortlink(
+                f"https://telegram.me/{temp.U_NAME}?start=notcopy_{user_id}_{verify_id}_{file_id}",
+                grp_id, False, False, pm_mode=pm_mode
+            )
+
+            # Get tutorial link
+            howtodownload = settings.get('tutorial', TUTORIAL)
+
+            # Create verification buttons
+            buttons = [[
+                InlineKeyboardButton(text="✅ ᴠᴇʀɪғʏ ✅", url=verify),
+                InlineKeyboardButton(text="ʜᴏᴡ ᴛᴏ ᴠᴇʀɪғʏ❓", url=howtodownload)
+            ], [
+                InlineKeyboardButton(text="😁 ʙᴜʏ sᴜʙsᴄʀɪᴘᴛɪᴏɴ - ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ 😁", callback_data='seeplans'),
+            ]]
+            reply_markup = InlineKeyboardMarkup(buttons)
+
+            # Send verification message
+            msg = script.VERIFICATION_TEXT
+            d = await message.reply_text(
+                text=msg.format(message.from_user.mention, get_status()),
+                protect_content=False,
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
+
+            # Auto-delete messages after 5 minutes
+            await asyncio.sleep(300)
+            await d.delete()
+            await message.delete()
+            return
 
     if data and data.startswith("allfiles"):
         _, key = data.split("_", 1)

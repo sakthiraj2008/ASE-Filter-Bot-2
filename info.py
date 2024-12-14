@@ -31,9 +31,9 @@ COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_Files')
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #----------- There will be channel id add in all these ---------
-LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '0'))  # set shortner log channel
+LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1001821439025'))  # set shortner log channel
 DELETE_CHANNELS = int(environ.get('DELETE_CHANNELS','0')) # The movie you upload in it will be deleted from the bot.
-LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '0'))
+LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1001821439025'))
 auth_channel = environ.get('AUTH_CHANNEL', '-1002008853384')
 SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '0'))
 request_channel = environ.get('REQUEST_CHANNEL', '-1001793064603') # If anyone sends a request message to your bot, you will get it in this channel.
@@ -48,7 +48,7 @@ TUTORIAL = environ.get("TUTORIAL", "https://t.me/How_downlode_dpbots/22")
 #TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg")
 SHORTENER_API = environ.get("SHORTENER_API", "6b30ad861a51b05f8dc26311c5b72b5038f2cdee")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'publicearn.com')
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'publicearn.online')
 #SHORTENER_API2 = environ.get("SHORTENER_API2", "")
 #SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", '')
 #SHORTENER_API3 = environ.get("SHORTENER_API3", "")
@@ -80,7 +80,7 @@ REACTIONS = ["👀", "😱", "🔥", "😍", "🎉", "🥰", "😇", "⚡"]
 #---------------------------------------------------------------
 FILE_AUTO_DEL_TIMER = int(environ.get('FILE_AUTO_DEL_TIMER', '600'))
 AUTO_FILTER = is_enabled('AUTO_FILTER', True)
-IS_PM_SEARCH = is_enabled('IS_PM_SEARCH', True)
+IS_PM_SEARCH = is_enabled('IS_PM_SEARCH', False)
 IS_SEND_MOVIE_UPDATE = is_enabled('IS_SEND_MOVIE_UPDATE', True) # Don't Change It ( If You Want To Turn It On Then Turn It On By Commands) We Suggest You To Make It Turn Off If You Are Indexing Files First Time.
 PORT = environ.get('PORT', '80')
 MAX_BTN = int(environ.get('MAX_BTN', '5'))
@@ -107,7 +107,7 @@ if 'DYNO' in environ:
     ON_HEROKU = True
 else:
     ON_HEROKU = False
-URL = environ.get("FQDN", "https://web-hx2guqlvsho3.up-de-fra1-k8s-1.apps.run-on-seenode.com/")
+URL = environ.get("FQDN", "https://google-translater-bot.onrender.com/")
 
 #---------------------------------------------------------------
 #---------------------------------------------------------------

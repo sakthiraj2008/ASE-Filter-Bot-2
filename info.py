@@ -12,43 +12,43 @@ def is_enabled(value, default):
         return default
 #---------------------------------------------------------------
 #---------------------------------------------------------------         ,
-SESSION = environ.get('SESSION', 'Media_search')
-API_ID = int(environ.get('API_ID', '11973721'))
-API_HASH = environ.get('API_HASH', '5264bf4663e9159565603522f58d3c18')
-BOT_TOKEN = environ.get('BOT_TOKEN', '6353181790:AAEppoFnz3s2etaj5HQxPz0-D2VY7rqUa0k')
+SESSION = environ.get('SESSION', 'Anime_search')
+API_ID = int(environ.get('API_ID', '11472991'))
+API_HASH = environ.get('API_HASH', 'c78c50d54baf2173e8b3f75c359c0c72')
+BOT_TOKEN = environ.get('BOT_TOKEN', '8064704914:AAHLVol3T3UzYxDYBr6l_I0nkaia2bHVMys')
 #---------------------------------------------------------------
 #---------------------------------------------------------------
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '1391556668 1242556540').split()]
-USERNAME = environ.get('USERNAME', "https://t.me/U_Karthik") # ADMIN USERNAME
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1001821439025'))
-MOVIE_GROUP_LINK = environ.get('MOVIE_GROUP_LINK', 'https://t.me/All_Tamil_movies_request')
-CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002267578638').split()]
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in environ.get('ADMINS', '1430742022').split()]
+USERNAME = environ.get('USERNAME', "https://t.me/itzz_me_alexxa") # ADMIN USERNAME
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1002318167392'))
+MOVIE_GROUP_LINK = environ.get('MOVIE_GROUP_LINK', 'https://t.me/+F0-m4r26aF5hNzll')
+CHANNELS = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('CHANNELS', '-1002271334221').split()]
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://KarthikMovies:KarthikUK007@cluster0.4l5byki.mongodb.net/?retryWrites=true&w=majority")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
-COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Star_Files')
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'ASE_Files')
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #----------- There will be channel id add in all these ---------
-LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1001821439025'))  # set shortner log channel
+LOG_API_CHANNEL = int(environ.get('LOG_API_CHANNEL', '-1002318167392'))  # set shortner log channel
 DELETE_CHANNELS = int(environ.get('DELETE_CHANNELS','0')) # The movie you upload in it will be deleted from the bot.
-LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1001821439025'))
-auth_channel = environ.get('AUTH_CHANNEL', '-1002008853384')
-SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', '0'))
-request_channel = environ.get('REQUEST_CHANNEL', '-1001793064603') # If anyone sends a request message to your bot, you will get it in this channel.
-MOVIE_UPDATE_CHANNEL = [int(muc) if id_pattern.search(muc) else muc for muc in environ.get('MOVIE_UPDATE_CHANNEL', '-1002244141688 -1001715180239 -1001589399161 -1001139111796 -1002097728232').split()]
-SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/Star_Bots_Tamil_Support') #Support group link ( make sure bot is admin )
+LOG_VR_CHANNEL = int(environ.get('LOG_VR_CHANNEL', '-1002318167392'))
+auth_channel = environ.get('AUTH_CHANNEL', '-1002450932371')
+SUPPORT_GROUP = int(environ.get('SUPPORT_GROUP', 'https://t.me/+eBzYtdaY7Bc2ZDVl'))
+request_channel = environ.get('REQUEST_CHANNEL', ' -1002298937998') # If anyone sends a request message to your bot, you will get it in this channel.
+MOVIE_UPDATE_CHANNEL = [int(muc) if id_pattern.search(muc) else muc for muc in environ.get('MOVIE_UPDATE_CHANNEL', '-1002313827186').split()]
+SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'https://t.me/coder_kakashi_bot') #Support group link ( make sure bot is admin )
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 IS_VERIFY = is_enabled('IS_VERIFY', True)
 #---------------------------------------------------------------
-TUTORIAL = environ.get("TUTORIAL", "https://t.me/How_downlode_dpbots/22")
+TUTORIAL = environ.get("TUTORIAL", "https://t.me/quick_download_linkzz/10")
 #TUTORIAL_2 = environ.get("TUTORIAL_2", "https://t.me/")
 #TUTORIAL_3 = environ.get("TUTORIAL_3", "https://t.me/")
 VERIFY_IMG = environ.get("VERIFY_IMG", "https://graph.org/file/1669ab9af68eaa62c3ca4.jpg")
-SHORTENER_API = environ.get("SHORTENER_API", "6b30ad861a51b05f8dc26311c5b72b5038f2cdee")
-SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'publicearn.online')
+SHORTENER_API = environ.get("SHORTENER_API", "cf28791d8f9477119977add9a7232aab97e5d09a")
+SHORTENER_WEBSITE = environ.get("SHORTENER_WEBSITE", 'techvjlinks.site')
 #SHORTENER_API2 = environ.get("SHORTENER_API2", "")
 #SHORTENER_WEBSITE2 = environ.get("SHORTENER_WEBSITE2", '')
 #SHORTENER_API3 = environ.get("SHORTENER_API3", "")
@@ -58,9 +58,9 @@ TWO_VERIFY_GAP = int(environ.get('TWO_VERIFY_GAP', "14400"))
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 LANGUAGES = ["tamil", "english", "telugu", "hindi", "kannada", "malayalam", "bengali", "marathi", "gujarati", "punjabi"]
-QUALITIES = ["HDRip","WEB-DL" ,"Bluray", "HDR", "FHD" , "240p", "360p", "480p", "540p", "720p", "960p", "1080p", "1440p", "2K", "2160p", "4K", "5K", "8K"]
+QUALITIES = ["240p", "360p", "480p", "540p", "720p", "960p", "1080p", "1440p", "2K", "2160p", "4K", ,"Bluray", "HDRip"]
 YEARS = [f'{i}' for i in range(2024 , 2002,-1 )]
-SEASONS = [f'season {i}'for i in range (1 , 23)]
+SEASONS = [f'season {i}'for i in range (1 , 30)]
 REF_PREMIUM = 30
 PREMIUM_POINT = 1500
 #---------------------------------------------------------------
@@ -69,10 +69,10 @@ REQUEST_CHANNEL = int(request_channel) if request_channel and id_pattern.search(
 #---------------------------------------------------------------
 #---------------------------------------------------------------
 #---------------------------------------------------------------
-START_IMG = (environ.get('START_IMG', 'https://telegra.ph/file/41966a240dcae8c4aed6d.jpg')).split()
+START_IMG = (environ.get('START_IMG', 'https://envs.sh/Ic0.jpg')).split()
 FORCESUB_IMG = environ.get('FORCESUB_IMG', 'https://i.ibb.co/ZNC1Hnb/ad3f2c88a8f2.jpg')
 REFER_PICS = (environ.get("REFER_PICS", "https://envs.sh/PSI.jpg")).split() 
-PAYPICS = (environ.get('PAYPICS', 'https://envs.sh/4UC.jpg')).split()
+PAYPICS = (environ.get('PAYPICS', 'https://envs.sh/dhQ.jpg')).split()
 SUBSCRIPTION = (environ.get('SUBSCRIPTION', 'https://envs.sh/4UR.jpg'))
 REACTIONS = ["👀", "😱", "🔥", "😍", "🎉", "🥰", "😇", "⚡"]
 #---------------------------------------------------------------
@@ -80,7 +80,7 @@ REACTIONS = ["👀", "😱", "🔥", "😍", "🎉", "🥰", "😇", "⚡"]
 #---------------------------------------------------------------
 FILE_AUTO_DEL_TIMER = int(environ.get('FILE_AUTO_DEL_TIMER', '600'))
 AUTO_FILTER = is_enabled('AUTO_FILTER', True)
-IS_PM_SEARCH = is_enabled('IS_PM_SEARCH', False)
+IS_PM_SEARCH = is_enabled('IS_PM_SEARCH', True)
 IS_SEND_MOVIE_UPDATE = is_enabled('IS_SEND_MOVIE_UPDATE', True) # Don't Change It ( If You Want To Turn It On Then Turn It On By Commands) We Suggest You To Make It Turn Off If You Are Indexing Files First Time.
 PORT = environ.get('PORT', '80')
 MAX_BTN = int(environ.get('MAX_BTN', '5'))
